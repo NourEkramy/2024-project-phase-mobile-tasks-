@@ -1,0 +1,127 @@
+import 'dart:io';
+
+void main() {
+    var prodManager = ProductManager();
+    
+    while (true) {
+        print("\n=== eCommerce Application ===");
+        print("1. Add Product");
+        print("2. View All Products");
+        print("3. View Single Product");
+        print("4. Edit Product");
+        print("5. Delete Product");
+        print("6. Exit");
+        stdout.write("Choose an option: ");
+        
+        var choice = stdin.readLineSync();
+        
+        switch (choice) {
+            case '1':
+                stdout.write("Enter Product Name: ");
+                String name = stdin.readLineSync()!;
+                stdout.write("Enter Description: ");
+                String description = stdin.readLineSync()!;
+                stdout.write("Enter Price: ");
+                double price = double.parse(stdin.readLineSync()!);
+                prodManager.addProduct(name, description, price);
+                break;
+            
+            case '2':
+                prodManager.viewAllProducts();
+                break;
+            
+            case '3':
+                stdout.write("Enter Product ID: ");
+                int id = int.parse(stdin.readLineSync()!);
+                prodManager.viewProduct(id);
+                break;
+            
+            case '4':
+                stdout.write("Enter Product ID: ");
+                int id = int.parse(stdin.readLineSync()!);
+                stdout.write("Enter New Name: ");
+                String newName = stdin.readLineSync()!;
+                stdout.write("Enter New Description: ");
+                String newDescription = stdin.readLineSync()!;
+                stdout.write("Enter New Price: ");
+                double newPrice = double.parse(stdin.readLineSync()!);
+                prodManager.editProduct(id, newName, newDescription, newPrice);
+                break;
+            
+            case '5':
+                stdout.write("Enter Product ID: ");
+                int id = int.parse(stdin.readLineSync()!);
+                prodManager.deleteProduct(id);
+                break;
+            
+            case '6':
+                print("Exiting the application.");
+                return;
+            
+            default:
+                print("Invalid choice. Please try again.");
+        }
+    }
+}
+
+class Product {
+    String name, description;
+    double price;
+    
+    Product(this.name, this.description, this.price);
+    
+    void displayProduct() {
+        print("Name: $name");
+        print("Description: $description");
+        print("Price: \$$price");
+    }
+}
+
+class ProductManager {
+    List<Product> products = [];
+    
+    void addProduct(String name, String description, double price) {
+        products.add(Product(name, description, price));
+        print("Product added successfully!");
+    }
+    
+    void viewAllProducts() {
+        if (products.isEmpty) {
+            print("No products available.");
+            return;
+        }
+        for (var i = 0; i < products.length; i++) {
+            print("Product ID: $i");
+            products[i].displayProduct();
+            print("-------------------");
+        }
+    }
+    
+    void viewProduct(int id) {
+        if (id < 0 || id >= products.length) {
+            print("Invalid Product ID.");
+            return;
+        }
+        products[id].displayProduct();
+    }
+    
+    void editProduct(int id, String newName, String newDescription, double newPrice) {
+        if (id < 0 || id >= products.length) {
+            print("Invalid Product ID.");
+            return;
+        }
+        products[id].name = newName;
+        products[id].description = newDescription;
+        products[id].price = newPrice;
+        print("Product updated successfully!");
+    }
+    
+    void deleteProduct(int id) {
+        if (id < 0 || id >= products.length) {
+            print("Invalid Product ID.");
+            return;
+        }
+        products.removeAt(id);
+        print("Product deleted successfully!");
+    }
+}
